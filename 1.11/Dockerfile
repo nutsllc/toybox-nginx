@@ -1,9 +1,8 @@
 FROM nginx:1.11
 MAINTAINER NutsProject,LLC
 
-
-RUN tar cvzf /usr/src/nginx-default-doc.tar.gz -C /usr/share/nginx/html ./
-RUN tar cvzf /usr/src/nginx-conf.tar.gz -C /etc/nginx ./
+RUN tar czf /usr/src/nginx-default-doc.tar.gz -C /usr/share/nginx/html ./ \
+    && tar czf /usr/src/nginx-conf.tar.gz -C /etc/nginx ./
 
 WORKDIR /usr/share/nginx/html
 
