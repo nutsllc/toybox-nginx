@@ -16,14 +16,18 @@ fi
 
 docroot="/usr/share/nginx/html"
 mkdir -p ${docroot}
-echo "extract ${docroot}"
-tar xzf /usr/src/nginx-default-doc.tar.gz -C ${docroot}
+[ $(ls "${docroot}" | wc -l) -ne 0 ] && {
+    echo "extract ${docroot}"
+    tar xzf /usr/src/nginx-default-doc.tar.gz -C ${docroot}
+}
 chown -R ${user}:${group} ${docroot}
 
 confdir="/etc/nginx"
 mkdir -p ${confdir}
-echo "extract ${confdir}"
-tar xzf /usr/src/nginx-conf.tar.gz -C ${confdir}
+[ $(ls "${confdir}" | wc -l) -ne 0 ] && {
+    echo "extract ${confdir}"
+    tar xzf /usr/src/nginx-conf.tar.gz -C ${confdir}
+}
 chown -R ${user}:${group} ${confdir}
 
 exec nginx -g "daemon off;"
