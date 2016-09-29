@@ -35,6 +35,7 @@ fi
 
 if [ -n "${PHP_FPM_HOST}" ]; then
     cp /default.conf ${confdir}/conf.d/default.conf
+    sed -i -e "s/fastcgi_pass   php:9000;/fastcgi_pass   ${PHP_FPM_HOST};/" ${confdir}/conf.d/default.conf
 fi
 
 chown -R ${user}:${group} ${confdir}

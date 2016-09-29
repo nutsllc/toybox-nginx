@@ -30,17 +30,50 @@ docker run -it -p 8080:80 -v $(pwd):/etc/nginx/conf.d -d nutsllc/toybox-nginx
 ```
 
 ## Docker Compose example
-```
+
+```bash
 toybox-nginx:
 	image: nutsllc/toybox-nginx:latest
 	volumes:
 		- "./.data/docroot:/usr/share/nginx/html"
-		- "./.data/conf:/etc/nginx/conf.d"
+		- "./.data/conf:/etc/nginx"
 	environment:
 		- TOYBOX_UID=1000
 		- TOYBOX_GID=1000
 	ports:
 		- "8080:80"
+```
+
+## Using with PHP-FPM
+
+If you want to run this container with PHP-FPM, apply an environment variable ``PHP_FPM_HOST``. 
+
+example below
+
+```bash
+toybox-nginx:
+    image: nginx
+    links:
+        - php-fpm
+    ports:
+        - 8080:80
+    environment:
+	 	 - TOYBOX_UID=1000
+		 - TOYBOX_GID=1000
+        - PHP_FPM_HOST=php-fpm:9000
+    volumes_from:
+        - data
+
+php-fpm:
+    image: php:5.6-fpm
+    volumes_from:
+        - data
+
+data:
+    image: busybox
+    volumes:
+        - ".data/docroot:/usr/share/nginx/html"
+        - ".data/conf:/etc/nginx"
 ```
 
 ## Contributing
