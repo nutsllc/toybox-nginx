@@ -16,18 +16,28 @@ fi
 
 docroot="/usr/share/nginx/html"
 mkdir -p ${docroot}
-[ $(ls "${docroot}" | wc -l) -ne 0 ] && {
-    echo "extract ${docroot}"
-    tar xzf /usr/src/nginx-default-doc.tar.gz -C ${docroot}
-}
+if [ $(ls "${docroot}" | wc -l) -eq 0 ] && [ -n "${PHP_FPM_HOST}" ]; then
+    echo "<?php phpinfo(); ?>" > ${docroot}/index.php
+elif [ $(ls "${docroot}" | wc -l) -eq 0 ]; then 
+    tar xzf /usr/src/nginx-default-doc.tar.gz -C ${docroot} && {
+        echo "extract ${docroot}"
+    }
+fi
 chown -R ${user}:${group} ${docroot}
 
 confdir="/etc/nginx"
 mkdir -p ${confdir}
-[ $(ls "${confdir}" | wc -l) -ne 0 ] && {
-    echo "extract ${confdir}"
-    tar xzf /usr/src/nginx-conf.tar.gz -C ${confdir}
-}
+if [ $(ls "${confdir}" | wc -l) -eq 0 ]; then 
+    tar xzf /usr/src/nginx-conf.tar.gz -C ${confdir} && {
+        echo "extract ${confdir}"
+    }
+fi
+
+if [ -n "${PHP_FPM_HOST}" ]; then
+    cp /default.conf ${confdir}/conf.d/default.conf
+    sed -i -e "s/fastcgi_pass   php:9000;/fastcgi_pass   ${PHP_FPM_HOST};/" ${confdir}/conf.d/default.conf
+fi
+
 chown -R ${user}:${group} ${confdir}
 
 exec nginx -g "daemon off;"
