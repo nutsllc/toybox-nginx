@@ -42,14 +42,17 @@ if [ $(ls "${confdir}" | wc -l) -eq 0 ]; then
     }
 fi
 
-# DOCUMENT_ROOT
-sed -i -e "s:/usr/share/nginx/html:${DOCUMENT_ROOT}:g" ${confdir}/conf.d/default.conf
 
 # PHP_FPM_HOST
 if [ -n "${PHP_FPM_HOST}" ]; then
     cp /default.conf ${confdir}/conf.d/default.conf
     sed -i -e "s/fastcgi_pass   php:9000;/fastcgi_pass   ${PHP_FPM_HOST};/" ${confdir}/conf.d/default.conf
 fi
+
+# DOCUMENT_ROOT
+sed -i -e "s:/usr/share/nginx/html:${DOCUMENT_ROOT}:g" ${confdir}/conf.d/default.conf
+sed -i -e "s:root   html:root   ${DOCUMENT_ROOT}:g" ${confdir}/conf.d/default.conf
+
 chown -R ${user}:${group} ${confdir}
 
 # -----------------------------
