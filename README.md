@@ -44,11 +44,17 @@ toybox-nginx:
 		- "8080:80"
 ```
 
+## Change Document root directory
+
+You'd like to change document root directory, apply ``DOCUMENT_ROOT`` environment variable  which is not required like ``-e DOCUMENT_ROOT=/var/www/html``.
+
+Default document root directory is ``/usr/share/nginx/html``. 
+
 ## Using with PHP-FPM
 
-If you want to run this container with PHP-FPM, apply an environment variable ``PHP_FPM_HOST``. 
+You'd like to run the nginx instance with PHP-FPM, apply an environment variable ``PHP_FPM_HOST``. 
 
-example below
+Example:
 
 ```bash
 toybox-nginx:
@@ -58,8 +64,8 @@ toybox-nginx:
     ports:
         - 8080:80
     environment:
-	 	 - TOYBOX_UID=1000
-		 - TOYBOX_GID=1000
+        - TOYBOX_UID=1000
+        - TOYBOX_GID=1000
         - PHP_FPM_HOST=php-fpm:9000
     volumes_from:
         - data
