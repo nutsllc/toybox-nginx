@@ -43,15 +43,28 @@ if [ $(ls "${confdir}" | wc -l) -eq 0 ]; then
 fi
 
 
+## PHP_FPM_HOST
+#if [ -n "${PHP_FPM_HOST}" ]; then
+#    cp /default.conf ${confdir}/conf.d/default.conf
+#    sed -i -e "s/\(fastcgi_pass   \)php:9000/\1${PHP_FPM_HOST}/" ${confdir}/conf.d/default.conf
+#fi
+
 # PHP_FPM_HOST
+out=${confdir}/conf.d/default.conf
 if [ -n "${PHP_FPM_HOST}" ]; then
-    cp /default.conf ${confdir}/conf.d/default.conf
-    sed -i -e "s/fastcgi_pass   php:9000;/fastcgi_pass   ${PHP_FPM_HOST};/" ${confdir}/conf.d/default.conf
+    sed -i -e "s/\(.*\)#\(location\)/\1\2/" ${out}
+    sed -i -e "s/\(.*\)#\(    root\)/\1\2/" ${out}
+    sed -i -e "s/\(.*\)#\(    fastcgi_pass\)/\1\2/" ${out}
+    sed -i -e "s/\(.*\)#\(    fastcgi_index\)/\1\2/" ${out}
+    sed -i -e "s/\(.*\)#\(    fastcgi_param\)/\1\2/" ${out}
+    sed -i -e "s/\(.*\)#\(    include\)/\1\2/" ${out}
+    sed -i -e "s/\(fastcgi_pass   \)127.0.0.1:9000/\1${PHP_FPM_HOST}/" ${out}
+    sed -i -e "s/\(.*\)#\(}\)/\1\2/" ${out}
 fi
 
 # DOCUMENT_ROOT
 sed -i -e "s:/usr/share/nginx/html:${DOCUMENT_ROOT}:g" ${confdir}/conf.d/default.conf
-sed -i -e "s:root   html:root   ${DOCUMENT_ROOT}:g" ${confdir}/conf.d/default.conf
+sed -i -e "s:\(.*root \{11\}\)html:\1${DOCUMENT_ROOT}:g" ${confdir}/conf.d/default.conf
 
 chown -R ${user}:${group} ${confdir}
 
