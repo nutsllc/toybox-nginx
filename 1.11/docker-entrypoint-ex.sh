@@ -34,32 +34,39 @@ chown -R ${user}:${group} ${DOCUMENT_ROOT}
 # -----------------------------
 # config
 # -----------------------------
-confdir="/etc/nginx"
-mkdir -p ${confdir}
-if [ $(ls "${confdir}" | wc -l) -eq 0 ]; then 
-    tar xzf /usr/src/nginx-conf.tar.gz -C ${confdir} && {
-        echo "extract ${confdir}"
+confbase="/etc/nginx"
+conf_dir=${confbase}/conf.d
+
+mkdir -p ${confbase}
+if [ $(ls "${confbase}" | wc -l) -eq 0 ]; then 
+    tar xzf /usr/src/nginx-conf.tar.gz -C ${confbase} && {
+        sed -i -e "s:/usr/share/nginx/html:${DOCUMENT_ROOT}:g" ${conf_dir}/default.conf
+        sed -i -e "s:\(.*root \{11\}\)html:\1${DOCUMENT_ROOT}:g" ${conf_dir}/default.conf
+        echo "extract ${confbase}"
     }
 fi
 
+# -----------------------------
 # PHP_FPM_HOST
-out=${confdir}/conf.d/default.conf
+# -----------------------------
 if [ -n "${PHP_FPM_HOST}" ]; then
-    sed -i -e "s/\(.*\)#\(location\)/\1\2/" ${out}
-    sed -i -e "s/\(.*\)#\(    root\)/\1\2/" ${out}
-    sed -i -e "s/\(.*\)#\(    fastcgi_pass\)/\1\2/" ${out}
-    sed -i -e "s/\(.*\)#\(    fastcgi_index\)/\1\2/" ${out}
-    sed -i -e "s/\(.*\)#\(    fastcgi_param\)/\1\2/" ${out}
-    sed -i -e "s/\(.*\)#\(    include\)/\1\2/" ${out}
-    sed -i -e "s/\(fastcgi_pass   \)127.0.0.1:9000/\1${PHP_FPM_HOST}/" ${out}
-    sed -i -e "s/\(.*\)#\(}\)/\1\2/" ${out}
+    [ -f ${conf_dir}/default.conf ] && {
+        rm ${conf_dir}/default.conf
+    }
+    mv /default-fpm.conf ${conf_dir}/default-fpm.conf
+#    sed -i -e "s/\(.*\)#\(location\)/\1\2/" ${conf_dir}
+#    sed -i -e "s/\(.*\)#\(    root\)/\1\2/" ${conf_dir}
+#    sed -i -e "s/\(.*\)#\(    fastcgi_pass\)/\1\2/" ${conf_dir}
+#    sed -i -e "s/\(.*\)#\(    fastcgi_index\)/\1\2/" ${conf_dir}
+#    sed -i -e "s/\(.*\)#\(    fastcgi_param\)/\1\2/" ${conf_dir}
+#    sed -i -e "s/\(.*\)#\(    include\)/\1\2/" ${conf_dir}
+    sed -i -e "s/\(fastcgi_pass   \)127.0.0.1:9000/\1${PHP_FPM_HOST}/" ${conf_dir}/default-fpm.conf
+#    sed -i -e "s/\(.*\)#\(}\)/\1\2/" ${conf_dir}
+    sed -i -e "s:/usr/share/nginx/html:${DOCUMENT_ROOT}:g" ${conf_dir}/default-fpm.conf
+    sed -i -e "s:\(.*root \{11\}\)html:\1${DOCUMENT_ROOT}:g" ${conf_dir}/default-fpm.conf
 fi
 
-# DOCUMENT_ROOT
-sed -i -e "s:/usr/share/nginx/html:${DOCUMENT_ROOT}:g" ${confdir}/conf.d/default.conf
-sed -i -e "s:\(.*root \{11\}\)html:\1${DOCUMENT_ROOT}:g" ${confdir}/conf.d/default.conf
-
-chown -R ${user}:${group} ${confdir}
+chown -R ${user}:${group} ${confbase}
 
 # -----------------------------
 # exec
