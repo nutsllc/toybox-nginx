@@ -6,6 +6,7 @@ RUN tar czf /usr/src/nginx-default-doc.tar.gz -C /usr/share/nginx/html ./ --remo
 
 WORKDIR /usr/share/nginx/html
 
+COPY default-fpm.conf /default-fpm.conf
 COPY docker-entrypoint-ex.sh /entrypoint-ex.sh
 
 ENTRYPOINT ["/entrypoint-ex.sh"]
