@@ -52,8 +52,8 @@ fi
 if [ -n "${PHP_FPM_HOST}" ]; then
     [ -f ${conf_dir}/default.conf ] && {
         rm ${conf_dir}/default.conf
+        mv /default-fpm.conf ${conf_dir}/default-fpm.conf
     }
-    mv /default-fpm.conf ${conf_dir}/default-fpm.conf
 #    sed -i -e "s/\(.*\)#\(location\)/\1\2/" ${conf_dir}
 #    sed -i -e "s/\(.*\)#\(    root\)/\1\2/" ${conf_dir}
 #    sed -i -e "s/\(.*\)#\(    fastcgi_pass\)/\1\2/" ${conf_dir}
