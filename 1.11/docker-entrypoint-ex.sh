@@ -54,14 +54,7 @@ if [ -n "${PHP_FPM_HOST}" ]; then
         rm ${conf_dir}/default.conf
         mv /default-fpm.conf ${conf_dir}/default-fpm.conf
     }
-#    sed -i -e "s/\(.*\)#\(location\)/\1\2/" ${conf_dir}
-#    sed -i -e "s/\(.*\)#\(    root\)/\1\2/" ${conf_dir}
-#    sed -i -e "s/\(.*\)#\(    fastcgi_pass\)/\1\2/" ${conf_dir}
-#    sed -i -e "s/\(.*\)#\(    fastcgi_index\)/\1\2/" ${conf_dir}
-#    sed -i -e "s/\(.*\)#\(    fastcgi_param\)/\1\2/" ${conf_dir}
-#    sed -i -e "s/\(.*\)#\(    include\)/\1\2/" ${conf_dir}
     sed -i -e "s/\(fastcgi_pass   \)127.0.0.1:9000/\1${PHP_FPM_HOST}/" ${conf_dir}/default-fpm.conf
-#    sed -i -e "s/\(.*\)#\(}\)/\1\2/" ${conf_dir}
     sed -i -e "s:/usr/share/nginx/html:${DOCUMENT_ROOT}:g" ${conf_dir}/default-fpm.conf
     sed -i -e "s:\(.*root \{11\}\)html:\1${DOCUMENT_ROOT}:g" ${conf_dir}/default-fpm.conf
 fi
