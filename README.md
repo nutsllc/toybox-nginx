@@ -34,12 +34,11 @@ docker run -it -p 8080:80 -v $(pwd):/etc/nginx/conf.d -d nutsllc/toybox-nginx
 ```bash
 toybox-nginx:
 	image: nutsllc/toybox-nginx:latest
-	volumes:
-		- "./.data/docroot:/usr/share/nginx/html"
-		- "./.data/conf:/etc/nginx"
 	environment:
 		- TOYBOX_UID=1000
 		- TOYBOX_GID=1000
+	volumes:
+		- "./.data/docroot:/usr/share/nginx/html"
 	ports:
 		- "8080:80"
 ```
@@ -58,7 +57,7 @@ Example:
 
 ```bash
 toybox-nginx:
-    image: nginx
+    image: nutsllc/toybox-nginx:latest
     links:
         - php-fpm
     ports:
@@ -79,7 +78,6 @@ data:
     image: busybox
     volumes:
         - ".data/docroot:/usr/share/nginx/html"
-        - ".data/conf:/etc/nginx"
 ```
 
 ## Contributing
