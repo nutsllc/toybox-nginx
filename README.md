@@ -24,7 +24,7 @@ In addition, this image is compatible with [ToyBox](https://github.com/nutsllc/t
 docker run -it -p 8080:80 -v $(pwd)/.data/docroot:/usr/share/nginx/html -d nutsllc/toybox-nginx
 ```
 
-### Persistent the Apache2 config files
+### Persistent the Nginx config files
 ```bash
 docker run -it -p 8080:80 -v $(pwd):/etc/nginx/conf.d -d nutsllc/toybox-nginx
 ```
