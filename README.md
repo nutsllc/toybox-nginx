@@ -6,8 +6,6 @@ This ``toybox-nginx`` image has been extended [the official nginx image](https:/
 
 This image is registered to the [Docker Hub](https://hub.docker.com/r/nutsllc/toybox-nginx/) which is the official docker image registory.
 
-In addition, this image is compatible with [ToyBox](https://github.com/nutsllc/toybox) complytely to manage the applications on Docker.
-
 ## Usage
 
 ### The simplest way to run
@@ -45,39 +43,39 @@ toybox-nginx:
 
 ## Change Document root directory
 
-You'd like to change document root directory, apply ``DOCUMENT_ROOT`` environment variable  which is not required like ``-e DOCUMENT_ROOT=/var/www/html``.
+You would like to change document root directory, apply ``DOCUMENT_ROOT`` environment variable: ``-e DOCUMENT_ROOT=/var/www/html``.
 
-Default document root directory is ``/usr/share/nginx/html``. 
+A default document root directory is ``/usr/share/nginx/html``. 
 
 ## Using with PHP-FPM
 
-You'd like to run the nginx instance with PHP-FPM, apply an environment variable ``PHP_FPM_HOST``. 
+You would like to run the nginx instance with PHP-FPM, apply an environment variable ``PHP_FPM_HOST`` and add ``volumes_from`` to bind data container.
+
+Data container shuld join a ``/usr/share/nginx/html`` directory to Nginx container and PHP-FPM container.
 
 Example:
 
 ```bash
-toybox-nginx:
-    image: nutsllc/toybox-nginx:latest
-    links:
-        - php-fpm
-    ports:
-        - 8080:80
-    environment:
-        - TOYBOX_UID=1000
-        - TOYBOX_GID=1000
-        - PHP_FPM_HOST=php-fpm:9000
-    volumes_from:
-        - data
+version: '2'
+services:
+	toybox-nginx:
+   		image: nutsllc/toybox-nginx:latest
+    	environment:
+	        - PHP_FPM_HOST=php-fpm:9000
+		volumes_from:
+			- data
+		ports:
+			- 8080:80
 
-php-fpm:
-    image: php:5.6-fpm
-    volumes_from:
-        - data
+	php-fpm:
+		image: php:5.6-fpm
+		volumes_from:
+			- data
 
-data:
-    image: busybox
-    volumes:
-        - ".data/docroot:/usr/share/nginx/html"
+	data:
+		image: busybox
+		volumes:
+			- ".data/docroot:/usr/share/nginx/html"
 ```
 
 ## Contributing
