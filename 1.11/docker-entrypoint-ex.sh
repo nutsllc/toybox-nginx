@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 set -e
 
 user="nginx"
@@ -8,14 +8,25 @@ group="nginx"
 # UID & GID
 # -----------------------------
 if [ -n "${TOYBOX_GID}" ] && ! cat /etc/group | awk 'BEGIN{ FS= ":" }{ print $3 }' | grep ${TOYBOX_GID} > /dev/null 2>&1; then
-    groupmod -g ${TOYBOX_GID} ${group}
+    if [ type groupmod ]; then
+        groupmod -g ${TOYBOX_GID} ${group}
+    else
+        sed -i -e "s%^\(${user}:x:\)[0-9]*\(:.*\)$%\1${TOYBOX_GID}\2%" /etc/group
+        sed -i -e "s%^\(${user}:x:[0-9]*:\)[0-9]*\(:.*\)$%\1${TOYBOX_GID}\2%" /etc/passwd
+    fi
     echo "GID of ${group} has been changed."
 fi
 
 if [ -n "${TOYBOX_UID}" ] && ! cat /etc/passwd | awk 'BEGIN{ FS= ":" }{ print $3 }' | grep ${TOYBOX_UID} > /dev/null 2>&1; then
-    usermod -u ${TOYBOX_UID} ${user}
+    if [ type usermod ]; then
+        usermod -u ${TOYBOX_UID} ${user}
+    else
+        sed -i -e "s%^\(${user}:x:\)[0-9]*\(:[0-9]*:.*\)$%\1${TOYBOX_UID}\2%" /etc/passwd
+    fi
     echo "UID of ${user} has been changed."
 fi
+
+
 
 # -----------------------------
 # document root
