@@ -2,9 +2,18 @@
 
 A Dockerfile for deploying a [Nginx](https://nginx.org/) using Docker container.
 
-This ``toybox-nginx`` image has been extended [the official nginx image](https://hub.docker.com/_/nginx/) which is maintained in the [docker-library/nginx](https://github.com/docker-library/nginx) GitHub repository.
+This image has been extended [the official nginx image](https://hub.docker.com/_/nginx/) which is maintained in the [docker-library/nginx](https://github.com/docker-library/nginx) GitHub repository.
 
 This image is registered to the [Docker Hub](https://hub.docker.com/r/nutsllc/toybox-nginx/) which is the official docker image registory.
+
+## Main Feautuers
+
+With this Docker image...
+
+* By setting the GID and UID of the main process user in the container, it is possible to avoid the permission trouble.
+* You can change the document root directory by environment variable.
+* An easy to work with PHP-FPM. All you need to do is just to set environment variable.
+
 
 ## Usage
 
@@ -41,7 +50,7 @@ toybox-nginx:
 		- "8080:80"
 ```
 
-## Change Document root directory
+## Changing the Document root directory
 
 You would like to change document root directory, apply ``DOCUMENT_ROOT`` environment variable: ``-e DOCUMENT_ROOT=/var/www/html``.
 
