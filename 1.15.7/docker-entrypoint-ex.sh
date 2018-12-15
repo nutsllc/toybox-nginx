@@ -26,6 +26,8 @@ if [ -n "${TOYBOX_UID}" ] && ! cat /etc/passwd | awk 'BEGIN{ FS= ":" }{ print $3
     echo "UID of ${user} has been changed."
 fi
 
+
+
 # -----------------------------
 # document root
 # -----------------------------
