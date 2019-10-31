@@ -7,6 +7,7 @@ MAINTAINER NutsProject,LLC
 
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY default.conf /etc/nginx/conf.d/default.conf
+COPY proxy-cache.conf /etc/nginx/conf.d/proxy-cache.conf
 COPY default-fpm.conf /etc/nginx/conf.d/default-fpm.conf
 COPY docker-entrypoint-ex.sh /entrypoint-ex.sh
 
