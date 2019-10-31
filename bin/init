@@ -1,0 +1,41 @@
+#!/bin/sh
+
+SELF=$(cd $(dirname $0);pwd)
+DIST=${SELF}/..
+
+dirs=(
+    #"${SELF}/../1.11.13"
+    "${SELF}/../1.12.2"
+    #"${SELF}/../1.13.12"
+    "${SELF}/../1.15.7"
+    "${SELF}/../1.16.1"
+    "${SELF}/../1.17.5"
+)
+
+src=${self}/../seed/ubuntu
+for d in ${dirs[@]}; do
+    [ -d ${d} ] && rm -r ${d}
+    label=$(echo ${d} | awk -F "/" '{print $(NF - 0)}')
+    version=${label:0:6}
+
+    printf "Generate: Dockerfile for nginx ${version} ..."
+    mkdir -p ${SELF}/../${version}-alpine
+    cp ${SELF}/../seed/Dockerfile-alpine.seed ${SELF}/../${version}-alpine/Dockerfile
+    cp ${SELF}/../seed/nginx.conf.seed ${SELF}/../${version}-alpine/nginx.conf
+    cp ${SELF}/../seed/default.conf.seed ${SELF}/../${version}-alpine/default.conf
+    cp ${SELF}/../seed/proxy-cache.conf.seed ${SELF}/../${version}-alpine/proxy-cache.conf
+    cp ${SELF}/../seed/default-fpm.conf.seed ${SELF}/../${version}-alpine/default-fpm.conf
+    cp ${SELF}/../seed/docker-entrypoint-ex.sh.seed ${SELF}/../${version}-alpine/docker-entrypoint-ex.sh
+
+    cp ${SELF}/../seed/docker-compose.yml.seed ${SELF}/../${version}-alpine/docker-compose.yml
+    cp ${SELF}/../seed/.dockerignore.seed ${SELF}/../${version}-alpine/.dockerignore
+    chmod 755 ${d}-alpine/default-fpm.conf
+    chmod 755 ${d}-alpine/docker-entrypoint-ex.sh
+    sed -i -e "s/{{VERSION}}/${version}/g" ${d}-alpine/Dockerfile
+    find ${d}-alpine -name *-e | xargs rm
+    echo "done."
+
+done
+
+echo "complete!"
+exit 0

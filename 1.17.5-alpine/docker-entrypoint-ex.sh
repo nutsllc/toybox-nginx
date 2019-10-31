@@ -33,16 +33,13 @@ fi
 # -----------------------------
 : ${DOCUMENT_ROOT:="/usr/share/nginx/html"}
 mkdir -p ${DOCUMENT_ROOT}
-
-if [ $(ls "${DOCUMENT_ROOT}" | wc -l) -eq 0 ]; then
+if [ $(ls "${DOCUMENT_ROOT}" | wc -l) -eq 0 ] && [ -n "${PHP_FPM_HOST}" ]; then
+    echo "<?php phpinfo(); ?>" > ${DOCUMENT_ROOT}/index.php
+elif [ $(ls "${DOCUMENT_ROOT}" | wc -l) -eq 0 ]; then 
     tar xzf /usr/src/nginx-default-doc.tar.gz -C ${DOCUMENT_ROOT} && {
         echo "extract ${DOCUMENT_ROOT}"
     }
-    if [ $(ls "${DOCUMENT_ROOT}" | wc -l) -eq 0 ] && [ -n "${PHP_FPM_HOST}" ]; then
-        echo "<?php phpinfo(); ?>" > ${DOCUMENT_ROOT}/fpm.php
-    fi
 fi
-
 chown -R ${user}:${group} ${DOCUMENT_ROOT}
 
 # -----------------------------
@@ -52,7 +49,7 @@ confbase="/etc/nginx"
 conf_dir=${confbase}/conf.d
 
 mkdir -p ${confbase}
-if [ $(ls "${confbase}" | wc -l) -eq 0 ]; then
+if [ $(ls "${confbase}" | wc -l) -eq 0 ]; then 
     tar xzf /usr/src/nginx-conf.tar.gz -C ${confbase} && {
         sed -i -e "s:/usr/share/nginx/html:${DOCUMENT_ROOT}:g" ${conf_dir}/default.conf
         sed -i -e "s:\(.*root \{11\}\)html:\1${DOCUMENT_ROOT}:g" ${conf_dir}/default.conf
