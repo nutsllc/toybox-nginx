@@ -12,9 +12,8 @@ dirs=(
     "${SELF}/../1.17.5"
 )
 
-src=${self}/../seed/ubuntu
 for d in ${dirs[@]}; do
-    [ -d ${d} ] && rm -r ${d}
+    [ -d ${d}-alpine ] && rm -r ${d}-alpine
     label=$(echo ${d} | awk -F "/" '{print $(NF - 0)}')
     version=${label:0:6}
 
