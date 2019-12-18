@@ -31,7 +31,7 @@ for d in ${dirs[@]}; do
     chmod 755 ${d}-alpine/default-fpm.conf
     chmod 755 ${d}-alpine/docker-entrypoint-ex.sh
     sed -i -e "s/{{VERSION}}/${version}/g" ${d}-alpine/Dockerfile
-    find ${d}-alpine -name *-e | xargs rm
+    #find ${d}-alpine -name *-e | xargs rm
     echo "done."
 
 done
