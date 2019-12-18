@@ -12,9 +12,8 @@ dirs=(
     "${SELF}/../1.17.5"
 )
 
-src=${self}/../seed/ubuntu
 for d in ${dirs[@]}; do
-    [ -d ${d} ] && rm -r ${d}
+    [ -d ${d}-alpine ] && rm -r ${d}-alpine
     label=$(echo ${d} | awk -F "/" '{print $(NF - 0)}')
     version=${label:0:6}
 
@@ -32,7 +31,7 @@ for d in ${dirs[@]}; do
     chmod 755 ${d}-alpine/default-fpm.conf
     chmod 755 ${d}-alpine/docker-entrypoint-ex.sh
     sed -i -e "s/{{VERSION}}/${version}/g" ${d}-alpine/Dockerfile
-    find ${d}-alpine -name *-e | xargs rm
+    #find ${d}-alpine -name *-e | xargs rm
     echo "done."
 
 done
