@@ -32,6 +32,7 @@ docker run -it -p 8080:80 -v $(pwd)/.data/docroot:/usr/share/nginx/html -d nutsl
 ```
 
 ### Persistent the Nginx config files
+
 ```bash
 docker run -it -p 8080:80 -v $(pwd):/etc/nginx/conf.d -d nutsllc/toybox-nginx
 ```
@@ -54,7 +55,7 @@ toybox-nginx:
 
 You would like to change document root directory, apply ``DOCUMENT_ROOT`` environment variable: ``-e DOCUMENT_ROOT=/var/www/html``.
 
-A default document root directory is ``/usr/share/nginx/html``. 
+A default document root directory is ``/usr/share/nginx/html``.
 
 ## Using with PHP-FPM
 
